@@ -1,4 +1,4 @@
-var db_version = 1
+var db_version = 2
 
 var openDatabase = function(){
   if (!window.indexedDB) {
@@ -16,7 +16,7 @@ var openDatabase = function(){
       db.createObjectStore("list",
         {autoIncrement: true}
       )
-    }    
+    }
   }
   return request
 }
@@ -45,6 +45,25 @@ var getList = function(successCallback){
         var text = cursor.value
         text['id'] = cursor.key
         texts.push(text)
+        cursor.continue()
+      } else {
+        successCallback(texts)
+      }
+    }
+  })
+}
+
+var getSelectedList = function(successCallback){
+  var texts = []
+  var db = openObjectStore("list", function(objectStore){
+    objectStore.openCursor().onsuccess = function(event){
+      var cursor = event.target.result
+      if (cursor) {
+        var text = cursor.value
+        if (text.selected) {
+          text['id'] = cursor.key
+          texts.push(text)
+        }
         cursor.continue()
       } else {
         successCallback(texts)

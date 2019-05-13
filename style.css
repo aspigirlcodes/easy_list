@@ -53,6 +53,13 @@ textarea {
   padding: 0.5rem;
 }
 
+h1 {
+  text-align: center;
+  font-weight: lighter;
+  color: #999;
+
+}
+
 .button-new {
   background-color: #079b2a;
   padding: .5rem;
@@ -61,6 +68,11 @@ textarea {
 .button-delete {
   background-color: #ba0505;
   padding: .5rem;
+}
+
+.button-large {
+  padding: 1rem;
+  font-size: 2rem;
 }
 
 .right {
@@ -130,12 +142,21 @@ PAGE STRUCTURE
 }
 
 .checkbox-label {
-  min-width: 80%
+  width: 100%
 }
 
 .item {
   display: flex;
-  border: 2px solid #333333;
+  border: 1px solid #333;
   padding: .5rem 1rem;
   width: 100%;
+}
+
+.items {
+  flex: 1 0 auto;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #999;
 }
