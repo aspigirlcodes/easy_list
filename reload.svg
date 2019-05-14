@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 66 69"
+   version="1.1"
+   x="0px"
+   y="0px"
+   id="svg22"
+   sodipodi:docname="reload.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata28">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Artboard 1</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs26" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1022"
+     id="namedview24"
+     showgrid="false"
+     inkscape:zoom="7.552"
+     inkscape:cx="40.592909"
+     inkscape:cy="70.747435"
+     inkscape:window-x="1920"
+     inkscape:window-y="34"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g16" />
+  <title
+     id="title2">Artboard 1</title>
+  <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+  
+    
+        <path
+           stroke="#000000" fill="none"
+           d="M61.0723188,15.6435732 C55.2546746,6.25406334 44.8576948,0 33,0 C14.7746024,0 0,14.7746024 0,33 C0,51.2253976 14.7746024,66 33,66 C51.2253976,66 66,51.2253976 66,33 C66,30.8468893 65.7937972,28.7419398 65.4000624,26.7038223"
+           id="path" transform="translate(0, 3)"
+           />
+        <rect
+           fill="#000000"
+           x="61"
+           y="0"
+           width="1"
+           height="18"/>
+        <rect
+           fill="#000000"
+           transform="translate(53, 18) rotate(-90) translate(-53, -18) "
+           x="52"
+           y="9"
+           width="1"
+           height="18"/>
+      
+</svg>

@@ -1,6 +1,6 @@
 
 
-
+var scrollParam = 0
 var container = document.getElementById('container')
 var container2 = document.getElementById('container2')
 container.style.display = "flex"
@@ -14,6 +14,8 @@ getList(function(list){
 document.getElementById("new-item-text").onchange = add_item
 document.getElementById("save-button").onclick = save_list
 document.getElementById("edit-button").onclick = edit_list
+document.getElementById("reload1").onclick = clear_selected
+document.getElementById("reload2").onclick = clear_done
 
 function add_item(){
   var text = document.getElementById('new-item-text')
@@ -65,8 +67,63 @@ function display_selected_item(object){
   div.setAttribute("data-item-id", object.id)
   var mc = new Hammer(div)
   mc.on("tap", mark_done)
+  mc.on("press", add_sort_event)
+  mc.get("pan").set({ direction: Hammer.DIRECTION_VERTICAL , enable: canEnable})
+  mc.on("pan", sort)
+  mc.on("pressup", stop_sort)
   container2.getElementsByClassName("items")[0].append(div)
 }
+
+function canEnable(rec, input){
+  var div = getDiv(rec.manager.element)
+  return div.classList.contains("panable")
+}
+
+function add_sort_event(ev){
+  var div = getDiv(ev.target)
+  div.style.marginLeft = "5px"
+  div.style.marginTop = "5px"
+  div.style.backgroundColor = "#333333"
+  div.style.zIndex = 100
+  div.classList.add('panable')
+}
+function sort(ev){
+  if(ev.srcEvent.type === 'pointercancel') return //chrome hack https://github.com/hammerjs/hammer.js/issues/1050
+  ev.preventDefault() // prevent scrolling in firefox
+  var div = getDiv(ev.target)
+  div.style.transform = 'translateY(' + (ev.deltaY + scrollParam) + 'px)' 
+  var scrollMaxY = window.scrollMaxY || (Math.max( document.body.scrollHeight, document.body.offsetHeight, 
+                     document.documentElement.clientHeight, document.documentElement.scrollHeight, 
+                     document.documentElement.offsetHeight ) - window.innerHeight)
+  if (ev.center.y < 25 && window.scrollY > 0){
+    window.scrollBy(0, -5)
+    scrollParam -= 5
+  } else if (ev.center.y > (window.innerHeight - 25) && window.scrollY < scrollMaxY){
+    window.scrollBy(0, 5)
+    scrollParam += 5
+  }
+  if(ev.isFinal) {
+    div.style = ""
+    div.classList.remove('panable')
+    scrollParam = 0
+    var targetDiv = getDiv(document.elementFromPoint(ev.center.x, ev.center.y))
+    if (targetDiv.classList.contains("item"))
+      div.parentNode.insertBefore(div, targetDiv)
+    else 
+      container2.getElementsByClassName("items")[0].appendChild(div)  
+  } 
+}
+
+function stop_sort(ev){
+  if(ev.srcEvent.type === 'pointercancel') return //chrome hack https://github.com/hammerjs/hammer.js/issues/1050
+  var div = getDiv(ev.target)
+  if(ev.isFinal) {
+    div.style = ""
+    div.classList.remove('panable')
+    scrollParam = 0
+  }
+}
+
 
 
 function getDiv(target){
@@ -122,9 +179,9 @@ function save_list(){
 }
 
 function edit_list(){
-  var things = container.getElementsByClassName("item")
-  while (things.length > 0){
-    things[0].remove()
+  var items = container.getElementsByClassName("item")
+  while (items.length > 0){
+    items[0].remove()
   }
   getList(function(list){
     for(var object of list){
@@ -133,4 +190,22 @@ function edit_list(){
   })
   container.style.display = "flex"
   container2.style.display = "none"
+}
+
+function clear_selected(){
+  var items = container.getElementsByClassName("checkbox-input")
+  for(var item of items){
+    item.checked = false
+  }
+}
+
+function clear_done(){
+  var items = container2.getElementsByClassName("done")
+  while(items.length > 0){
+    var id = items[0].parentNode.dataset.itemId
+    var object = {"text": items[0].innerHTML, "selected": true, "done": false}
+    updateInObjectStore("list", parseInt(id), object)
+    items[0].classList.remove("done")
+  }
+  
 }
