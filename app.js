@@ -11,6 +11,9 @@ getList(function(list){
   }
 })
 
+mc = new Hammer(document.body)
+mc.on("pan", redirect)
+
 document.getElementById("new-item-text").onchange = add_item
 document.getElementById("save-button").onclick = save_list
 document.getElementById("edit-button").onclick = edit_list
@@ -124,8 +127,6 @@ function stop_sort(ev){
   }
 }
 
-
-
 function getDiv(target){
   if (target.classList.contains("item")) 
     return target
@@ -134,9 +135,11 @@ function getDiv(target){
 }
 
 function remove_item(ev){
-  var div = getDiv(ev.target)
-  deleteFromObjectStore("list", parseInt(div.dataset.itemId))
-  div.parentNode.removeChild(div);
+  if (!(ev.center.y < window.innerHeight * 2 / 3 && ev.center.y > window.innerHeight / 3 && ev.center.x - ev.deltaX < window.innerWidth / 4)){
+    var div = getDiv(ev.target)
+    deleteFromObjectStore("list", parseInt(div.dataset.itemId))
+    div.parentNode.removeChild(div);
+  }
 }
 
 function toggle_select(ev){
@@ -209,3 +212,20 @@ function clear_done(){
   }
   
 }
+
+function redirect(ev){
+  if (ev.center.y < window.innerHeight * 2 / 3 && ev.center.y > window.innerHeight / 3){
+    if (ev.center.x - ev.deltaX < window.innerWidth / 4){
+      document.body.style.transform = 'translateX(' + ev.deltaX + 'px)'
+    }
+    if (ev.isFinal) {
+      if (ev.center.x > window.innerWidth * 3 / 4 && ev.deltaX > window.innerWidth * 3 / 4){
+        window.location.href = "https://aspigirlcodes.github.io/thought_sort"
+      } else {
+        document.body.style.transform =  ''
+      }
+    }
+  }
+  
+  
+} 
