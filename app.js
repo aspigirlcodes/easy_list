@@ -1,5 +1,3 @@
-
-
 var scrollParam = 0
 var container = document.getElementById('container')
 var container2 = document.getElementById('container2')
@@ -220,7 +218,7 @@ function redirect(ev){
     }
     if (ev.isFinal) {
       if (ev.center.x > window.innerWidth * 3 / 4 && ev.deltaX > window.innerWidth * 3 / 4){
-        window.location.href = "https://aspigirlcodes.github.io/thought_sort"
+        window.location.href = "https://aspigirlcodes.github.io/thought_sort/?inapp=true"
       } else {
         document.body.style.transform =  ''
       }

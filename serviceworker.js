@@ -54,10 +54,11 @@ self.addEventListener("activate", function(event){
 
 self.addEventListener("fetch", function(event){
   var requestURL = new URL(event.request.url)
-  // at ghpages we are not at root but at /thought_sort
+  // at ghpages we are not at root but at /easy_list
   // because of this also we made all the paths in CACHED_URLS relative without /
   // so we have to cut the / of the pathname of the url
-  if(requestURL.pathname === "/thought_sort/" || requestURL.pathname === "/")
+  if(requestURL.pathname === "/easy_list/" || requestURL.pathname === "/" || 
+    requestURL.pathname === "/easy_list/index.html" || requestURL.pathname === "/index.html")
     var cacheMatch = "index.html"
   else if (CACHED_URLS.includes(requestURL.pathname.slice(1))) 
     var cacheMatch = event.request
