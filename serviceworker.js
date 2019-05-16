@@ -60,7 +60,8 @@ self.addEventListener("fetch", function(event){
   if(requestURL.pathname === "/easy_list/" || requestURL.pathname === "/" || 
     requestURL.pathname === "/easy_list/index.html" || requestURL.pathname === "/index.html")
     var cacheMatch = "index.html"
-  else if (CACHED_URLS.includes(requestURL.pathname.slice(1))) 
+  else if (CACHED_URLS.includes(requestURL.pathname.slice(1)) || 
+    (requestURL.pathname.startsWith("/easy_list/") && CACHED_URLS.includes(requestURL.pathname.slice(11))))
     var cacheMatch = event.request
     
   if (typeof cacheMatch !== 'undefined'){

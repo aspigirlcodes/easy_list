@@ -1,4 +1,4 @@
-var db_version = 2
+var db_version = 3
 
 var openDatabase = function(){
   if (!window.indexedDB) {
@@ -15,6 +15,11 @@ var openDatabase = function(){
     if (!db.objectStoreNames.contains("list")) {
       db.createObjectStore("list",
         {autoIncrement: true}
+      )
+    }
+    if (!db.objectStoreNames.contains("settings")) {
+      db.createObjectStore("settings",
+        {keyPath: "key"}
       )
     }
   }
@@ -34,6 +39,16 @@ var openObjectStore = function(storeName, successCallback, transactionMode) {
     successCallback(objectStore)
   }
   return true
+}
+
+var getSetting = function(key, successCallback){
+  var texts = []
+  var db = openObjectStore("settings", function(objectStore){
+    objectStore.get(key).onsuccess = function(event){
+      object = event.target.result
+      successCallback(object)
+    }
+  })
 }
 
 var getList = function(successCallback){
@@ -76,19 +91,25 @@ var addToObjectStore = function(storeName, object, successCallback){
   openObjectStore(storeName, function(store) {
     store.add(object).onsuccess = function(event){
       var id = event.target.result
-      successCallback(id)
+      if(successCallback){
+        successCallback(id)
+      }
     }
   }, "readwrite")
   
 }
 
-var updateInObjectStore = function(storeName, id, object){
+var updateInObjectStore = function(storeName, id, object, successCallback){
   openObjectStore(storeName, function(objectStore){
     objectStore.openCursor().onsuccess = function(event){
       var cursor = event.target.result
       if (!cursor) {return}
       if (cursor.key === id) {
-        cursor.update(object)
+        cursor.update(object).onsuccess = function(){
+          if (successCallback){
+            successCallback()
+          }
+        }
         return
       }
       cursor.continue()

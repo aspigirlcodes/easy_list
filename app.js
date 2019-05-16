@@ -1,13 +1,24 @@
 var scrollParam = 0
 var container = document.getElementById('container')
 var container2 = document.getElementById('container2')
-container.style.display = "flex"
-container2.style.display = "none"
-getList(function(list){
-  for(var object of list){
-    display_item(object, true)
-  }
-})
+
+if(window.location.search === "?inapp=true"){
+  getSetting("state", function(object){
+    if (object) {
+      if (object.value === "create"){
+        display_create()
+      }
+      else {
+        display_use()
+      }
+    } else {
+      addToObjectStore("settings", {"key": "state", "value": "create"})
+    }
+  })
+} else {
+  updateInObjectStore("settings", "state", {"key": "state", "value": "create"})
+  display_create(true)
+}
 
 mc = new Hammer(document.body)
 mc.on("pan", redirect)
@@ -17,6 +28,27 @@ document.getElementById("save-button").onclick = save_list
 document.getElementById("edit-button").onclick = edit_list
 document.getElementById("reload1").onclick = clear_selected
 document.getElementById("reload2").onclick = clear_done
+
+function display_create(is_new){
+  container.style.display = "flex"
+  container2.style.display = "none"
+  getList(function(list){
+    for(var object of list){
+      display_item(object, is_new)
+    }
+  })
+}
+
+function display_use(){
+  getSelectedList(function(list){
+    container.style.display = "none"
+    container2.style.display = "flex"
+    container2.getElementsByClassName("items")[0].innerHTML = ""
+    for(var item of list){
+      display_selected_item(item)
+    }
+  })
+}
 
 function add_item(){
   var text = document.getElementById('new-item-text')
@@ -168,15 +200,8 @@ function save_list(){
     var object = {'text': text.innerHTML, 'selected': selected.checked, 'done': done}
     updateInObjectStore("list", parseInt(id), object)
   }
-  getSelectedList(function(list){
-    container.style.display = "none"
-    container2.style.display = "flex"
-    container2.getElementsByClassName("items")[0].innerHTML = ""
-    for(var item of list){
-      display_selected_item(item)
-    }
-  })
-  
+  display_use()
+  updateInObjectStore("settings", "state", {"key": "state", "value": "use"})
 }
 
 function edit_list(){
@@ -184,13 +209,8 @@ function edit_list(){
   while (items.length > 0){
     items[0].remove()
   }
-  getList(function(list){
-    for(var object of list){
-      display_item(object)
-    }
-  })
-  container.style.display = "flex"
-  container2.style.display = "none"
+  display_create()
+  updateInObjectStore("settings", "state", {"key": "state", "value": "create"})
 }
 
 function clear_selected(){
@@ -218,7 +238,33 @@ function redirect(ev){
     }
     if (ev.isFinal) {
       if (ev.center.x > window.innerWidth * 3 / 4 && ev.deltaX > window.innerWidth * 3 / 4){
-        window.location.href = "https://aspigirlcodes.github.io/thought_sort/?inapp=true"
+        getSetting("state", function(object){
+          if (object.value === "create"){
+            var items = container.getElementsByClassName("item")
+            if (items.length > 0){
+              for(var i = 0; i < items.length - 1; i++){
+                var item = items[i]
+                var id = item.dataset.itemId
+                var done = item.dataset.itemDone === "true"
+                var selected = document.getElementById("item-check-" + id)
+                var text = document.getElementById("item-text-" + id)
+                var object = {'text': text.innerHTML, 'selected': selected.checked, 'done': done}
+                updateInObjectStore("list", parseInt(id), object)
+              }
+              var item = items[items.length - 1]
+              var id = item.dataset.itemId
+              var done = item.dataset.itemDone === "true"
+              var selected = document.getElementById("item-check-" + id)
+              var text = document.getElementById("item-text-" + id)
+              var object = {'text': text.innerHTML, 'selected': selected.checked, 'done': done}
+              updateInObjectStore("list", parseInt(id), object, function(){
+                window.location.href = "https://aspigirlcodes.github.io/thought_sort/?inapp=true"
+              })
+            }
+          } else {
+            window.location.href = "https://aspigirlcodes.github.io/thought_sort/?inapp=true"
+          }
+        })
       } else {
         document.body.style.transform =  ''
       }
